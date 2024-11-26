@@ -19,7 +19,7 @@ export default function UserProfile() {
     return (
         <div className="p-6 bg-gray-100">
             <h1 className="text-2xl font-bold mb-4">User Profile</h1>
-            <p><strong>Name:</strong> {user.phone_number}</p>
+            <p><strong>Name:</strong> <span className="text-blue-500">{user.phone_number}</span></p>
             <button
                 onClick={handleLogout}
                 className="mt-4 bg-red-500 text-white py-2 px-4 rounded-md"
