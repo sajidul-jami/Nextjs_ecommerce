@@ -6,10 +6,12 @@ import Image from "next/image";
 import websitelogo from "@/public/images/websitelogo.jpeg";
 import { useCart } from '../context/CartContext';
 import { useUser } from '../context/UserContext'; // Import the useUser hook
+import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 
 export default function Navber() {
     const { cart } = useCart();
     const { user, logout } = useUser(); // Get the user and logout function from context
+    const router = useRouter(); // Instantiate the router
 
     const cartItemCount = cart.reduce((count, item) => count + item.quantity, 0);
 
@@ -18,6 +20,11 @@ export default function Navber() {
 
     const toggleUserDetails = () => {
         setShowUserDetails(!showUserDetails);
+    };
+
+    const handleProfileRedirect = () => {
+        router.push('/user_profile'); // Redirect to the user profile page
+        setShowUserDetails(false); // Hide the user details dropdown
     };
 
     return (
@@ -65,6 +72,12 @@ export default function Navber() {
                                 {showUserDetails && (
                                     <div className="absolute top-12 right-0 bg-white text-black p-4 rounded-md shadow-lg w-48">
                                         <p><strong>Name:</strong> {user.phone_number}</p>
+                                        <button
+                                            onClick={handleProfileRedirect} // Redirect to user profile page
+                                            className="mt-2 w-full bg-blue-500 text-white py-1 rounded-md"
+                                        >
+                                            Go to Profile
+                                        </button>
                                         <button
                                             onClick={() => {
                                                 logout();  // Calls logout function
