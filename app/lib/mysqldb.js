@@ -1,7 +1,7 @@
 export default async function getAllProducts(){
     console.log('mysqldb called');
     try {
-        const response = await fetch('http://192.168.50.111:3005/products');
+        const response = await fetch('http://localhost:3005/products');
         
         if (response.ok) {
             // Parse the JSON response
