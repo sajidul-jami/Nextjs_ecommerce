@@ -8,15 +8,11 @@ import getAllProducts from '@/app/lib/mysqldb';
 import { useUser } from '../context/UserContext';
 import { useRouter } from 'next/navigation';  // Use the router for redirecting
 
-
-
 export default function Limitedtimeoffer() {
     const [limitedoffers, setLimitedoffers] = useState([]);
     const { addToCart } = useCart();
     const { user } = useUser();  // Get user from context
     const router = useRouter();  // Access router to navigate
-
-
 
     useEffect(() => {
         // Fetch data on the client side
@@ -38,6 +34,19 @@ export default function Limitedtimeoffer() {
             );
         }
     };
+
+    const handleAddToCart = (limitedoffer) => {
+        addToCart(limitedoffer); // Add the product to the cart
+
+        // Show pop-up alert for 1 second
+        const alertTimeout = setTimeout(() => {
+            window.alert('Product added to cart!');
+        }, 0); // Display immediately
+        setTimeout(() => {
+            clearTimeout(alertTimeout); // Clear timeout after 1 second
+        }, 1000); // 1-second delay
+    };
+
     return (
         <div className='h-auto bg-purple-100 w-auto rounded-md m-[10px] flex flex-col'>
             <h1 className='text-gray-500 m-[10px]'>Limited Time Offers:</h1>
@@ -77,9 +86,7 @@ export default function Limitedtimeoffer() {
                             <div className='flex justify-around mt-[5px]'>
                                 <button
                                     className='px-[5px] py-[3px] bg-blue-400 rounded-sm'
-                                    onClick={() => {
-                                        addToCart(limitedoffer);
-                                    }}
+                                    onClick={() => handleAddToCart(limitedoffer)}
                                 >
                                     Add to Cart
                                 </button>

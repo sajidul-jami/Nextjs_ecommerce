@@ -5,12 +5,16 @@ import getSingleProducts from '@/app/lib/mysqldb_single';
 import Image from 'next/image';
 import { useUser } from '../../context/UserContext';
 import { useRouter } from 'next/navigation';  // Use the router for redirecting
+import { useCart } from '../../context/CartContext';
+
 
 export default function Page({ params }) {
     const { id } = params;
     const [singleProduct, setSingleProduct] = useState(null); // State for product details
     const { user } = useUser();  // Get user from context
     const router = useRouter();  // Access router to navigate
+    const { addToCart } = useCart();
+
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -42,6 +46,8 @@ export default function Page({ params }) {
         }
     };
 
+
+
     return (
         <div className='h-auto w-auto p-2 bg-purple-100 rounded-md m-[10px] flex flex-col text-black'>
             <div className='flex'>
@@ -62,8 +68,16 @@ export default function Page({ params }) {
                         <p>Brand: No Brand</p>
                         <h2 className='my-[15px] text-xl'>৳<span>{singleProduct.price}</span></h2>
                         <h2 className='mb-[15px] text-xl'>Color: <span>Color Options</span></h2>
-                        <h2 className='mb-[15px] text-xl'>Quantity: <span>429</span></h2>
+                        <h2 className='mb-[15px] text-xl'>Quantity: <span>{singleProduct.quantity}</span></h2>
                         <div className='flex justify-evenly'>
+                        <button
+                                    className='my-[10px] w-48 py-[10px] bg-red-800 text-white rounded-sm'
+                                    onClick={() => {
+                                        addToCart(singleProduct);
+                                    }}
+                                >
+                                    Add to Cart
+                                </button>
                             <button
                                 onClick={handleBuyNow}
                                 className='my-[10px] w-48 py-[10px] bg-red-800 text-white rounded-sm'
@@ -75,9 +89,9 @@ export default function Page({ params }) {
                 </div>
             </div>
 
-            <div className='flex justify-start w-full mt-4'>
+            <div className='justify-start w-full mt-4'>
                 <h1>Product Description:</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p>{singleProduct.description}</p>
             </div>
 
             <div className='mt-4'>

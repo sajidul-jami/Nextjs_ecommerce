@@ -18,8 +18,11 @@ export default function UserProfile() {
 
     return (
         <div className="p-6 bg-gray-100">
-            <h1 className="text-2xl font-bold mb-4">User Profile</h1>
-            <p><strong>Name:</strong> <span className="text-blue-500">{user.phone_number}</span></p>
+            <h1 className="text-2xl font-bold mb-4 text-purple-600">User Profile</h1> {/* Changed the color of the title */}
+            <p>
+                <strong className="text-red-500 ml-2">Name:</strong>
+                <span className="text-red-500 ml-2">{user.phone_number}</span> {/* Ensure phone number color is applied */}
+            </p>
             <button
                 onClick={handleLogout}
                 className="mt-4 bg-red-500 text-white py-2 px-4 rounded-md"
