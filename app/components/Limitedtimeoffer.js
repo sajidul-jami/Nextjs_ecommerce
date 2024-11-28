@@ -29,11 +29,13 @@ export default function Limitedtimeoffer() {
             alert("You need to be logged in to make a purchase!");
             router.push("/login_signup/login");  // Redirect to the login page
         } else {
-            router.replace(
-                `/checkout?id=${encodeURIComponent(limitedoffer.id)}&name=${encodeURIComponent(limitedoffer.name)}&price=${encodeURIComponent(limitedoffer.price)}`
-            );
+            // Wrap the limitedoffer in an array and add a default quantity of 1
+            const selectedProducts = [{ ...limitedoffer, quantity: 1 }];
+            router.push(`/checkout?products=${encodeURIComponent(JSON.stringify(selectedProducts))}`);
         }
     };
+    
+    
 
     const handleAddToCart = (limitedoffer) => {
         addToCart(limitedoffer); // Add the product to the cart

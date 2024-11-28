@@ -35,14 +35,15 @@ export default function Page({ params }) {
     }
 
     // Function to handle "Buy Now" action
-    const handleBuyNow = () => {
+
+    const handleBuyNow = (limitedoffer) => {
         if (!user) {
             alert("You need to be logged in to make a purchase!");
             router.push("/login_signup/login");  // Redirect to the login page
         } else {
-            router.replace(
-                `/checkout?id=${encodeURIComponent(singleProduct.id)}&name=${encodeURIComponent(singleProduct.name)}&price=${encodeURIComponent(singleProduct.price)}`
-            );
+            // Wrap the limitedoffer in an array and add a default quantity of 1
+            const selectedProducts = [{ ...singleProduct, quantity: 1 }];
+            router.push(`/checkout?products=${encodeURIComponent(JSON.stringify(selectedProducts))}`);
         }
     };
 

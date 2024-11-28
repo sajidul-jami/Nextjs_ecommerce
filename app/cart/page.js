@@ -3,51 +3,39 @@
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useRouter } from 'next/navigation';
+import { useUser } from '../context/UserContext'; // Assuming you have this context to manage user login
 
 export default function CartPage() {
-  const { cart, removeFromCart } = useCart(); // Access removeFromCart from context
+  const { cart, removeFromCart } = useCart();
+  const { user } = useUser(); // Get the user data from UserContext
   const [selectedItems, setSelectedItems] = useState([]);
   const router = useRouter();
 
-  // Function to toggle selection of items
   const toggleItemSelection = (itemId) => {
-    if (selectedItems.includes(itemId)) {
-      setSelectedItems(selectedItems.filter((id) => id !== itemId)); // Deselect the item
-    } else {
-      setSelectedItems([...selectedItems, itemId]); // Select the item
-    }
+    setSelectedItems((prev) =>
+      prev.includes(itemId) ? prev.filter((id) => id !== itemId) : [...prev, itemId]
+    );
   };
-
-  // Assuming `user` is coming from a context or authentication state
-  const user = true; // Replace this with actual user check (e.g., context or state)
 
   const handleBuyNow = () => {
     if (!user) {
-      alert("You need to be logged in to make a purchase!");
-      router.push("/login_signup/login");  // Redirect to the login page
+      alert('You must be logged in to proceed to checkout.');
+      router.push('login_signup/login'); // Redirect to login page if not logged in
       return;
     }
 
     if (selectedItems.length === 0) {
       alert('Please select at least one item to purchase.');
       return;
-    } else {
-      // Filter all selected items from the cart
-      const selectedProducts = cart.filter((item) => selectedItems.includes(item.id));
-
-      // Map through selected products and build query string for all items
-      const itemParams = selectedProducts.map(item => 
-        `id=${encodeURIComponent(item.id)}&name=${encodeURIComponent(item.name)}&price=${encodeURIComponent(item.price)}&quantity=${encodeURIComponent(item.quantity)}`
-      ).join('&');
-      console.log(itemParams);
-
-      // Redirect to the checkout page with all selected items
-      router.replace(`/checkout?${itemParams}`);
     }
+
+    const selectedProducts = cart.filter((item) => selectedItems.includes(item.id));
+    console.log(selectedProducts);
+    router.push(`/checkout?products=${encodeURIComponent(JSON.stringify(selectedProducts))}`);
   };
 
   return (
-    <div className="bg-black min-h-screen text-white py-10 px-6">
+    <div className="bg-black text-white py-10 px-6">
       <h2 className="text-3xl font-bold mb-6 text-center text-gray-200">Your Cart</h2>
       {cart.length === 0 ? (
         <p className="text-center text-gray-500">The cart is empty.</p>
@@ -78,7 +66,7 @@ export default function CartPage() {
                     ${item.price * item.quantity}
                   </p>
                   <button
-                    onClick={() => removeFromCart(item.id)} // Call removeFromCart when clicked
+                    onClick={() => removeFromCart(item.id)}
                     className="text-red-500 hover:text-red-700 font-semibold focus:outline-none"
                   >
                     Remove
@@ -89,12 +77,11 @@ export default function CartPage() {
           </ul>
           <h3 className="mt-6 text-2xl font-bold text-gray-200">
             Total: $
-            {cart.reduce((total, item) => {
-              if (selectedItems.includes(item.id)) {
-                return total + item.price * item.quantity;
-              }
-              return total;
-            }, 0)}
+            {cart.reduce(
+              (total, item) =>
+                selectedItems.includes(item.id) ? total + item.price * item.quantity : total,
+              0
+            )}
           </h3>
           <div className="flex justify-start mt-8">
             <button

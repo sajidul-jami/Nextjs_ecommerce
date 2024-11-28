@@ -10,7 +10,6 @@ export default function Home() {
       <Categoriesslideber />
       <Limitedtimeoffer />
       <Allproducts />
-      <Footer />
     </div>
   );
 }
